@@ -60,13 +60,13 @@ public class DefectLogController {
 		
 		for(DefectLogDto defectLogDto : defectLogData)
 		{
-			defectLogDto.setAssignedToName(getName("http://localhost:1724/employee/name/"+defectLogDto.getAssignedTo()));
+			defectLogDto.setAssignedToName(getName("http://localhost:1724/api/v1/employee/name/"+defectLogDto.getAssignedTo()));
 			
-			defectLogDto.setAssignedByName(getName("http://localhost:1724/employee/name/"+defectLogDto.getAssignedBy()));
+			defectLogDto.setAssignedByName(getName("http://localhost:1724/api/v1/employee/name/"+defectLogDto.getAssignedBy()));
 			
-			defectLogDto.setCreatedByName(getName("http://localhost:1724/employee/name/"+defectLogDto.getCreatedBy()));
+			defectLogDto.setCreatedByName(getName("http://localhost:1724/api/v1/employee/name/"+defectLogDto.getCreatedBy()));
 			
-			defectLogDto.setUpdatedByName(getName("http://localhost:1724/employee/name/"+defectLogDto.getUpdatedBy()));
+			defectLogDto.setUpdatedByName(getName("http://localhost:1724/api/v1/employee/name/"+defectLogDto.getUpdatedBy()));
 			
 			Status status = statusService.getStatusById(defectLogDto.getStatusId());
 			defectLogDto.setStatusName(status.getName());
