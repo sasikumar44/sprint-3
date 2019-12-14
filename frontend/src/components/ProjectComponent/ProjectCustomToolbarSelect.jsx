@@ -4,7 +4,6 @@ import EditIcon from "@material-ui/icons/Edit";
 import Fab from "@material-ui/core/Fab";
 import Tooltip from "@material-ui/core/Tooltip";
 import DeleteIcon from "@material-ui/icons/Delete";
-import ViewIcon from "@material-ui/icons/AspectRatio";
 import Dialog from "@material-ui/core/Dialog";
 import Divider from "@material-ui/core/Divider";
 import DialogActions from "@material-ui/core/DialogActions";
@@ -12,7 +11,6 @@ import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import Button from "@material-ui/core/Button";
-import ViewProjectForm from "./ViewProjectForm";
 import { Link } from "react-router-dom";
 
 const useStyles = makeStyles(theme => ({
@@ -28,24 +26,9 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-export default function ProjectCustomToolbarSelect({
-  id,
-  onEdit,
-  onDelete
-}) {
+export default function ProjectCustomToolbarSelect({ id, onEdit, onDelete }) {
   const classes = useStyles();
- 
-  const [openView, setOpenView] = React.useState(false);
   const [openDelete, setOpenDelete] = React.useState(false);
-
-  const handleViewOpen = () => {
-    setOpenView(true);
-  };
-
-  const handleViewClose = () => {
-    setOpenView(false);
-    onEdit();
-  };
 
   const handleDeleteOpen = () => {
     setOpenDelete(true);
@@ -57,38 +40,6 @@ export default function ProjectCustomToolbarSelect({
 
   return (
     <div>
-      <Tooltip title={"View"}>
-        <Fab
-          color="secondary"
-          aria-label="view"
-          className={classes.fab}
-          size="small"
-          onClick={handleViewOpen}
-        >
-          <ViewIcon />
-        </Fab>
-      </Tooltip>
-
-      <Dialog
-        open={openView}
-        onClose={handleViewClose}
-        aria-labelledby="view-project-title"
-        fullWidth={true}
-        maxWidth={"xs"}
-        //onClick={handleEditOpen}
-      >
-        <DialogTitle id="view-project-title">View Project</DialogTitle>
-        <Divider />
-        <DialogContent>
-          <ViewProjectForm />
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleViewClose} color="primary">
-            Close
-          </Button>
-        </DialogActions>
-      </Dialog>
-
       <Tooltip title={"Edit"}>
         <Fab
           color="secondary"
@@ -96,10 +47,8 @@ export default function ProjectCustomToolbarSelect({
           className={classes.fab}
           size="small"
           component={Link}
-          to={{pathname: '/manage-project/edit-project', sta: {id}}}
-          
+          to={{ pathname: "/manage-project/edit-project", sta: { id } }}
         >
-          
           <EditIcon />
         </Fab>
       </Tooltip>
@@ -134,11 +83,7 @@ export default function ProjectCustomToolbarSelect({
           <Button onClick={handleDeleteClose} color="primary">
             Cancel
           </Button>
-          <Button
-            variant="contained"
-            onClick={onDelete}
-            color="primary"
-          >
+          <Button variant="contained" onClick={onDelete} color="primary">
             Delete
           </Button>
         </DialogActions>

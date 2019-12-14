@@ -1,5 +1,6 @@
 package com.sgic.employee.server.entities;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import javax.persistence.Column;
@@ -26,7 +27,7 @@ public class Employee {
 	@NotNull
 	private String lastName;
 	@NotNull
-	private LocalDateTime dateOfBirth;
+	private LocalDate dateOfBirth;
 	@NotNull
 	private Long designationId;
 	@NotNull
@@ -43,8 +44,8 @@ public class Employee {
 	@NotNull
 	private String active;
 	@NotNull
-	private LocalDateTime joinDate;
-	private LocalDateTime leaveDate;
+	private LocalDate joinDate;
+	private LocalDate leaveDate;
 	@NotNull
 	private String username;
 	@NotNull
@@ -59,10 +60,10 @@ public class Employee {
 		
 	}
 
-	public Employee(Long id, @NotNull String firstName, @NotNull String lastName, @NotNull LocalDateTime dateOfBirth,
+	public Employee(Long id, @NotNull String firstName, @NotNull String lastName, @NotNull LocalDate dateOfBirth,
 			@NotNull Long designationId, @NotNull String address, @NotNull String phoneNumber, @NotNull String email,
-			@NotNull String bench, String photo, @NotNull String active, @NotNull LocalDateTime joinDate,
-			LocalDateTime leaveDate, @NotNull String username, @NotNull String password, String remarks,
+			@NotNull String bench, String photo, @NotNull String active, @NotNull LocalDate joinDate,
+			LocalDate leaveDate, @NotNull String username, @NotNull String password, String remarks,
 			LocalDateTime createdOn, LocalDateTime updatedOn) {
 		super();
 		this.id = id;
@@ -97,7 +98,7 @@ public class Employee {
 		return lastName;
 	}
 
-	public LocalDateTime getDateOfBirth() {
+	public LocalDate getDateOfBirth() {
 		return dateOfBirth;
 	}
 
@@ -129,11 +130,11 @@ public class Employee {
 		return active;
 	}
 
-	public LocalDateTime getJoinDate() {
+	public LocalDate getJoinDate() {
 		return joinDate;
 	}
 
-	public LocalDateTime getLeaveDate() {
+	public LocalDate getLeaveDate() {
 		return leaveDate;
 	}
 
@@ -169,7 +170,7 @@ public class Employee {
 		this.lastName = lastName;
 	}
 
-	public void setDateOfBirth(LocalDateTime dateOfBirth) {
+	public void setDateOfBirth(LocalDate dateOfBirth) {
 		this.dateOfBirth = dateOfBirth;
 	}
 
@@ -201,11 +202,11 @@ public class Employee {
 		this.active = active;
 	}
 
-	public void setJoinDate(LocalDateTime joinDate) {
+	public void setJoinDate(LocalDate joinDate) {
 		this.joinDate = joinDate;
 	}
 
-	public void setLeaveDate(LocalDateTime leaveDate) {
+	public void setLeaveDate(LocalDate leaveDate) {
 		this.leaveDate = leaveDate;
 	}
 

@@ -1,4 +1,4 @@
-import React,{useEffect} from "react";
+import React, { useEffect } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import TextField from "@material-ui/core/TextField";
 import Grid from "@material-ui/core/Grid";
@@ -40,11 +40,11 @@ const divStyle = {
 
 export default function EditModuleForm({ id, onFinish }) {
   const classes = useStyles();
- 
+
   const [values, setValues] = React.useState({
-    id:"",
+    id: "",
     name: "",
-    projectId:""
+    projectId: ""
   });
   const [projects, setProjects] = React.useState([]);
   const [showResult, setShowResult] = React.useState("");
@@ -56,7 +56,6 @@ export default function EditModuleForm({ id, onFinish }) {
         console.log(response);
         let result = response.data.results.Object;
         updateData(result);
-        
       })
       .catch(error => {
         console.log(error);
@@ -74,7 +73,7 @@ export default function EditModuleForm({ id, onFinish }) {
       .catch(error => {
         console.log(error);
       });
-  },);
+  });
 
   const updateData = data => {
     setValues({
@@ -114,6 +113,18 @@ export default function EditModuleForm({ id, onFinish }) {
         onSubmit={handleSubmit}
       >
         <Grid container justify="space-between">
+          <FormControl required className={classes.formControl}>
+            <InputLabel htmlFor="project-name">Project</InputLabel>
+            <Select
+              id="project-name"
+              value={values.projectId}
+              onChange={handleChange("projectId")}
+            >
+              {projects.map((el, i) => (
+                <MenuItem value={el.id}>{el.name}</MenuItem>
+              ))}
+            </Select>
+          </FormControl>
           <TextField
             required
             id="Module-name"
@@ -124,17 +135,9 @@ export default function EditModuleForm({ id, onFinish }) {
             margin="normal"
             variant="outlined"
           />
-          <FormControl required className={classes.formControl}>
-            <InputLabel htmlFor="project-name">Project</InputLabel>
-            <Select id="project-name" value={values.projectId}  onChange={handleChange("projectId")}>
-            {
-            projects.map((el,i) => (<MenuItem value={el.id}>{el.name}</MenuItem>))
-            }
-            </Select>
-          </FormControl>
         </Grid>
         <Grid container justify="flex-end">
-        <Button
+          <Button
             color="primary"
             size="large"
             className={classes.button}

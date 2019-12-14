@@ -22,7 +22,7 @@ const useStyles = makeStyles(theme => ({
 const columns = [
   {
     name: "id",
-    label: "SubModule Id",
+    label: "Submodule Id",
     options: {
       filter: true,
       sort: true,
@@ -31,7 +31,7 @@ const columns = [
   },
   {
     name: "name",
-    label: "SubModule Name",
+    label: "Submodule Name",
     options: {
       filter: true,
       sort: false

@@ -67,9 +67,7 @@ public class EmployeeController {
 
 		Employee employee = mapper.map(employeeData, Employee.class);
 		employeeService.createEmployee(employee);
-		return new ResponseEntity<>(new ApiResponse(RestApiResponseStatus.CREATED), HttpStatus.OK);	
-		// return new ResponseEntity<>(new ApiResponse(RestApiResponseStatus.OK),
-		// HttpStatus.OK);
+		return new ResponseEntity<>(new ApiResponse(RestApiResponseStatus.CREATED), HttpStatus.OK);
 	}
 	
 	// ADD EMPLOYEE END =====================================================================================================

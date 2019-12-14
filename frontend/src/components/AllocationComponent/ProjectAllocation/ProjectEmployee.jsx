@@ -91,7 +91,6 @@ export default function ProjectEmployee() {
       <Container className={classes.container}>
         <Grid container justify="flex-start">
           <Button
-            type="submit"
             className={classes.button}
             variant="contained"
             color="primary"

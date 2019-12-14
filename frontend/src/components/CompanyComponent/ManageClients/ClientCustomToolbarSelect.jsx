@@ -26,10 +26,9 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-export default function CompanyCustomToolbarSelect() {
+export default function CompanyCustomToolbarSelect({ id, onDelete }) {
   const classes = useStyles();
   const [openDelete, setOpenDelete] = React.useState(false);
-
 
   const handleDeleteOpen = () => {
     setOpenDelete(true);
@@ -47,7 +46,10 @@ export default function CompanyCustomToolbarSelect() {
           className={classes.fab}
           size="small"
           component={Link}
-          to={"/company-administration/manage-client/edit-client"}
+          to={{
+            pathname: "/company-administration/manage-client/edit-client",
+            edit: { id }
+          }}
         >
           <EditIcon className={classes.icon} />
         </Fab>
@@ -83,11 +85,7 @@ export default function CompanyCustomToolbarSelect() {
           <Button onClick={handleDeleteClose} color="primary">
             Cancel
           </Button>
-          <Button
-            variant="contained"
-            onClick={handleDeleteClose}
-            color="primary"
-          >
+          <Button variant="contained" onClick={onDelete} color="primary">
             Delete
           </Button>
         </DialogActions>

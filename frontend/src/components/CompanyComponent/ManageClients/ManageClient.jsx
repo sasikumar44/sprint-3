@@ -1,9 +1,10 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import MUIDataTable from "mui-datatables";
 import Container from "@material-ui/core/Container";
 import ClientCustomToolbar from "./ClientCustomToolbar";
 import ClientCustomToolbarSelect from "./ClientCustomToolbarSelect";
+import Axios from "axios";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -18,9 +19,15 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
+const divStyle = {
+  marginRight: "35px",
+  marginLeft: "35px",
+  marginTop: "30px"
+};
+
 const columns = [
   {
-    name: "ClientName",
+    name: "name",
     label: "Client Name",
     options: {
       filter: true,
@@ -28,7 +35,7 @@ const columns = [
     }
   },
   {
-    name: "ClientEmail",
+    name: "email",
     label: "Client Email",
     options: {
       filter: true,
@@ -36,7 +43,7 @@ const columns = [
     }
   },
   {
-    name: "ClientType",
+    name: "type",
     label: "Client Type",
     options: {
       filter: true,
@@ -44,15 +51,15 @@ const columns = [
     }
   },
   {
-    name: "JoinedDate",
-    label: "Client Joined Date",
+    name: "joinedDate",
+    label: "Joined Date",
     options: {
       filter: true,
       sort: false
     }
   },
   {
-    name: "ContactPerson",
+    name: "contactPerson",
     label: "Contact Person",
     options: {
       filter: true,
@@ -60,7 +67,7 @@ const columns = [
     }
   },
   {
-    name: "ContactNo",
+    name: "contactNo",
     label: "Contact No",
     options: {
       filter: true,
@@ -69,37 +76,84 @@ const columns = [
   }
 ];
 
-const data = [
-  {
-    ClientName: "LOLC",
-    ClientEmail: "admin@lolc.com",
-    ClientType: "Private",
-    JoinedDate: "27-06-2019",
-    ContactPerson: "Sinthujan",
-    ContactNo: "0777123456"
-  }
-];
-
-const options = {
-  filterType: "checkbox",
-  selectableRows: "single",
-  selectableRowsOnClick: true,
-  responsive: "scrollMaxHeight",
-  customToolbar: () => {
-    return <ClientCustomToolbar />;
-  },
-  customToolbarSelect: () => {
-    return <ClientCustomToolbarSelect />;
-  }
-};
-
 export default function ManageClient() {
   const classes = useStyles();
+  const [client, setClient] = React.useState([]);
+  const [showResult, setShowResult] = React.useState("");
+  const [message, setMessage] = React.useState("");
+  const [trackDelete, setTrackDelete] = React.useState(false);
+  const [values] = React.useState({
+    id: ""
+  });
+
+  useEffect(() => {
+    Axios.get("http://localhost:1724/api/v1/client")
+      .then(response => {
+        console.log(response);
+        setClient(response.data.results.listAllClient);
+      })
+      .catch(error => {
+        console.log(error);
+        setShowResult("alert alert-danger");
+        setMessage("Failed to Retrive Data");
+      });
+  }, [trackDelete]);
+
+  const handleTrackDelete = () => {
+    setTrackDelete(!trackDelete);
+  };
+
+  const getId = () => {
+    return values.id;
+  };
+
+  const options = {
+    filterType: "dropdown",
+    selectableRows: "single",
+    selectableRowsOnClick: true,
+    responsive: "scrollMaxHeight",
+    textLabels: {
+      body: {
+        noMatch: client.length > 0 ? "Loading data..." : "No Records Found!"
+      }
+    },
+    customToolbar: () => {
+      return <ClientCustomToolbar />;
+    },
+    customToolbarSelect: () => {
+      return <ClientCustomToolbarSelect onDelete={handleDelete} id={getId} />;
+    },
+    onRowsSelect: allRows => {
+      allRows.forEach(row => {
+        const dataRow = client[row.dataIndex];
+        values.id = dataRow["id"];
+        console.log(values.id);
+      });
+    }
+  };
+
+  const handleDelete = () => {
+    Axios.delete(`http://localhost:1724/api/v1/client/${values.id}`)
+      .then(response => {
+        console.log(response);
+        setShowResult("alert alert-success");
+        setMessage(response.data.message);
+        handleTrackDelete();
+      })
+      .catch(error => {
+        console.log(error);
+        setShowResult("alert alert-danger");
+        setMessage("Failed to Delete");
+      });
+  };
 
   return (
     <div>
+      <div style={divStyle} className={showResult} role="alert">
+        {message}
+      </div>
       <Container className={classes.container}>
-        <MUIDataTable data={data} columns={columns} options={options} />
+        <MUIDataTable data={client} columns={columns} options={options} />
       </Container>
     </div>
   );

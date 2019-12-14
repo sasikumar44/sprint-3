@@ -53,10 +53,10 @@ export default function SubModuleCustomToolbar({ onCreate }) {
         fullWidth={true}
         maxWidth={"sm"}
       >
-        <DialogTitle id="add-project-title">Add SubModule</DialogTitle>
+        <DialogTitle id="add-project-title">Add Submodule</DialogTitle>
         <Divider />
         <DialogContent>
-        <AddSubModuleForm onFinish={handleAddClose}/>
+          <AddSubModuleForm onFinish={handleAddClose} />
         </DialogContent>
       </Dialog>
     </React.Fragment>

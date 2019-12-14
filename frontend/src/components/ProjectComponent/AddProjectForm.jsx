@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import TextField from "@material-ui/core/TextField";
 import InputLabel from "@material-ui/core/InputLabel";
@@ -87,8 +87,9 @@ export default function AddProjectForm() {
   const inputLabel = React.useRef(null);
   const [showResult, setShowResult] = React.useState("");
   const [message, setMessage] = React.useState("");
-  const [startDate1, setStartDate1] = React.useState(new Date("2019-12-24"));
-  const [endDate1, setEndDate1] = React.useState(new Date("2019-12-24"));
+  const [clients, setClients] = React.useState([]);
+  const [startDate1, setStartDate1] = React.useState(new Date());
+  const [endDate1, setEndDate1] = React.useState(new Date());
 
   const [values, setValues] = React.useState({
     name: "",
@@ -96,9 +97,21 @@ export default function AddProjectForm() {
     clientId: "",
     type: "",
     status: "",
-    startDate: new Date("2019-12-20"),
-    endDate: new Date("2019-12-24")
+    startDate: startDate1,
+    endDate: endDate1
   });
+
+  useEffect(() => {
+    Axios.get("http://localhost:1724/api/v1/client")
+      .then(response => {
+        console.log("A");
+        console.log(response);
+        setClients(response.data.results.listAllClient);
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  }, []);
 
   const handleStartDateChange = date => {
     setStartDate1(date);
@@ -172,9 +185,11 @@ export default function AddProjectForm() {
                     value={values.clientId}
                     onChange={handleChange("clientId")}
                   >
-                    <MenuItem value="Virtusa">Virtusa</MenuItem>
-                    <MenuItem value="Mitra">Mitra</MenuItem>
-                    <MenuItem value="Axiata">Axiata</MenuItem>
+                    {clients.map((client, i) => (
+                      <MenuItem key={i} value={client.id}>
+                        {client.name}
+                      </MenuItem>
+                    ))}
                   </Select>
                 </FormControl>
                 <FormControl required className={classes.formControl}>

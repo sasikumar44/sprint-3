@@ -16,6 +16,7 @@ const useStyles = makeStyles(theme => ({
     overflowX: "auto"
   },
   textField: {
+    marginTop: theme.spacing(3),
     marginLeft: theme.spacing(1),
     marginRight: theme.spacing(3),
     margin: theme.spacing(1),
@@ -43,10 +44,9 @@ export default function AddSubModuleForm({ onFinish }) {
   const [values, setValues] = React.useState({
     name: "",
     projectId: "",
-    moduleId: "",
-    description: ""
+    moduleId: ""
   });
-
+  const [projects, setProjects] = React.useState([]);
   const [modules, setModules] = React.useState([]);
   const [showResult, setShowResult] = React.useState("");
   const [message, setMessage] = React.useState("");
@@ -59,13 +59,25 @@ export default function AddSubModuleForm({ onFinish }) {
     setValues({
       name: "",
       projectId: "",
-      moduleId: "",
-      description: ""
+      moduleId: ""
     });
   };
 
   useEffect(() => {
-    Axios.get("http://localhost:1725/api/v1/module")
+    Axios.get("http://localhost:1725/api/v1/project")
+      .then(response => {
+        console.log(response);
+        setProjects(response.data.results.List);
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  }, []);
+
+  useEffect(() => {
+    Axios.get(
+      `http://localhost:1725/api/v1/module/byproject/${values.projectId}`
+    )
       .then(response => {
         console.log(response);
         setModules(response.data.results.List);
@@ -73,7 +85,7 @@ export default function AddSubModuleForm({ onFinish }) {
       .catch(error => {
         console.log(error);
       });
-  }, []);
+  }, [values.projectId]);
 
   const handleSubmit = event => {
     event.preventDefault();
@@ -101,6 +113,22 @@ export default function AddSubModuleForm({ onFinish }) {
         onSubmit={handleSubmit}
       >
         <Grid container justify="space-between">
+          <FormControl required className={classes.formControl}>
+            <InputLabel ref={inputLabel} htmlFor="project-name">
+              Project
+            </InputLabel>
+            <Select
+              id="project-name"
+              value={values.projectId}
+              onChange={handleChange("projectId")}
+            >
+              {projects.map((project, i) => (
+                <MenuItem key={i} value={project.id}>
+                  {project.name}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
           <FormControl required className={classes.formControl}>
             <InputLabel ref={inputLabel} htmlFor="submodule-name">
               Module Name

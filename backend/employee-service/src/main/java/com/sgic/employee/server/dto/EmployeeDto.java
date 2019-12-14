@@ -1,12 +1,13 @@
 package com.sgic.employee.server.dto;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 public class EmployeeDto {
 	private Long id;
 	private String firstName;
 	private String lastName;
-	private LocalDateTime dateOfBirth;	
+	private LocalDate dateOfBirth;	
 	private Long designationId;
 	private String designationName;
 	private String address;
@@ -15,8 +16,8 @@ public class EmployeeDto {
 	private String bench;
 	private String photo;
 	private String active;
-	private LocalDateTime joinDate;
-	private LocalDateTime leaveDate;
+	private LocalDate joinDate;
+	private LocalDate leaveDate;
 	private String username;
 	private String password;
 	private String remarks;
@@ -32,7 +33,7 @@ public class EmployeeDto {
 	public String getLastName() {
 		return lastName;
 	}
-	public LocalDateTime getDateOfBirth() {
+	public LocalDate getDateOfBirth() {
 		return dateOfBirth;
 	}
 	public Long getDesignationId() {
@@ -59,10 +60,10 @@ public class EmployeeDto {
 	public String getActive() {
 		return active;
 	}
-	public LocalDateTime getJoinDate() {
+	public LocalDate getJoinDate() {
 		return joinDate;
 	}
-	public LocalDateTime getLeaveDate() {
+	public LocalDate getLeaveDate() {
 		return leaveDate;
 	}
 	public String getUsername() {
@@ -89,7 +90,7 @@ public class EmployeeDto {
 	public void setLastName(String lastName) {
 		this.lastName = lastName;
 	}
-	public void setDateOfBirth(LocalDateTime dateOfBirth) {
+	public void setDateOfBirth(LocalDate dateOfBirth) {
 		this.dateOfBirth = dateOfBirth;
 	}
 	public void setDesignationId(Long designationId) {
@@ -116,10 +117,10 @@ public class EmployeeDto {
 	public void setActive(String active) {
 		this.active = active;
 	}
-	public void setJoinDate(LocalDateTime joinDate) {
+	public void setJoinDate(LocalDate joinDate) {
 		this.joinDate = joinDate;
 	}
-	public void setLeaveDate(LocalDateTime leaveDate) {
+	public void setLeaveDate(LocalDate leaveDate) {
 		this.leaveDate = leaveDate;
 	}
 	public void setUsername(String username) {

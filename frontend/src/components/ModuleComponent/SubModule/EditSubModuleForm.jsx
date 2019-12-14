@@ -1,4 +1,4 @@
-import React, {useEffect} from "react";
+import React, { useEffect } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import TextField from "@material-ui/core/TextField";
 import Grid from "@material-ui/core/Grid";
@@ -42,10 +42,10 @@ export default function EditSubModuleForm({ id, onFinish }) {
   const classes = useStyles();
   const [values, setValues] = React.useState({
     name: "",
-    projectId:"",
-    moduleId:"",
-    description:""
+    projectId: "",
+    moduleId: ""
   });
+  const [projects, setProjects] = React.useState([]);
   const [modules, setModules] = React.useState([]);
   const [showResult, setShowResult] = React.useState("");
   const [message, setMessage] = React.useState("");
@@ -56,7 +56,6 @@ export default function EditSubModuleForm({ id, onFinish }) {
         console.log(response);
         let result = response.data.results.Object;
         updateData(result);
-        
       })
       .catch(error => {
         console.log(error);
@@ -66,7 +65,20 @@ export default function EditSubModuleForm({ id, onFinish }) {
   }, [id]);
 
   useEffect(() => {
-    Axios.get("http://localhost:1725/api/v1/module")
+    Axios.get("http://localhost:1725/api/v1/project")
+      .then(response => {
+        console.log(response);
+        setProjects(response.data.results.List);
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  }, []);
+
+  useEffect(() => {
+    Axios.get(
+      `http://localhost:1725/api/v1/module/byproject/${values.projectId}`
+    )
       .then(response => {
         console.log(response);
         setModules(response.data.results.List);
@@ -74,12 +86,13 @@ export default function EditSubModuleForm({ id, onFinish }) {
       .catch(error => {
         console.log(error);
       });
-  },);
+  }, [values.projectId]);
 
   const updateData = data => {
     setValues({
       id: data.id,
       name: data.name,
+      projectId: data.projectId,
       moduleId: data.moduleId
     });
   };
@@ -107,20 +120,38 @@ export default function EditSubModuleForm({ id, onFinish }) {
       <div style={divStyle} className={showResult} role="alert">
         {message}
       </div>
-      <form         
+      <form
         className={classes.container}
         autoComplete="off"
-        onSubmit={handleSubmit}>
+        onSubmit={handleSubmit}
+      >
         <Grid container justify="space-between">
           <FormControl required className={classes.formControl}>
-            <InputLabel  htmlFor="submodule-name">
-              Module Name
-            </InputLabel>
-            <Select id="module-name" value={values.moduleId} onChange={handleChange("moduleId")} >
-            {
-            modules.map((el,i) => (<MenuItem key = {i} value={el.id}>{el.name}</MenuItem>))
-            }
-             
+            <InputLabel htmlFor="project-name">Project</InputLabel>
+            <Select
+              id="project-name"
+              value={values.projectId}
+              onChange={handleChange("projectId")}
+            >
+              {projects.map((project, i) => (
+                <MenuItem key={i} value={project.id}>
+                  {project.name}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+          <FormControl required className={classes.formControl}>
+            <InputLabel htmlFor="submodule-name">Module Name</InputLabel>
+            <Select
+              id="module-name"
+              value={values.moduleId}
+              onChange={handleChange("moduleId")}
+            >
+              {modules.map((el, i) => (
+                <MenuItem key={i} value={el.id}>
+                  {el.name}
+                </MenuItem>
+              ))}
             </Select>
           </FormControl>
           <TextField
@@ -135,11 +166,12 @@ export default function EditSubModuleForm({ id, onFinish }) {
           />
         </Grid>
         <Grid container justify="flex-end">
-          <Button             
+          <Button
             color="primary"
             size="large"
             className={classes.button}
-            onClick={onFinish}>
+            onClick={onFinish}
+          >
             Close
           </Button>
           <Button

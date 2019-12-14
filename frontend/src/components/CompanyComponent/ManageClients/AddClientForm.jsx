@@ -12,11 +12,11 @@ import Button from "@material-ui/core/Button";
 import { Link } from "react-router-dom";
 import "date-fns";
 import DateFnsUtils from "@date-io/date-fns";
+import Axios from "axios";
 import {
   MuiPickersUtilsProvider,
   KeyboardDatePicker
 } from "@material-ui/pickers";
-
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -76,6 +76,12 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
+const divStyle = {
+  marginRight: "50px",
+  marginLeft: "50px",
+  marginTop: "20px"
+};
+
 export default function AddClientForm() {
   const classes = useStyles();
   const inputLabel = React.useRef(null);
@@ -83,22 +89,63 @@ export default function AddClientForm() {
   React.useEffect(() => {
     setLabelWidth(inputLabel.current.offsetWidth);
   }, []);
-  const [value, setValue] = React.useState("");
-  const [selectedDate, setSelectedDate] = React.useState(
-    new Date("2019-10-24T21:11:54")
-  );
- 
-  const handleDateChange = date => {
-    setSelectedDate(date);
+  const [joinDate, setJoinDate] = React.useState(new Date());
+  const [values, setValues] = React.useState({
+    name: "",
+    email: "",
+    type: "",
+    joinedDate: joinDate,
+    contactPerson: "",
+    contactNo: ""
+  });
+  const [showResult, setShowResult] = React.useState("");
+  const [message, setMessage] = React.useState("");
+
+  const handleJoinDateChange = date => {
+    setJoinDate(date);
+    setValues({ ...values, joinedDate: date });
   };
 
+  const handleChange = name => event => {
+    setValues({ ...values, [name]: event.target.value });
+    console.log(values);
+  };
 
-  const handleChange = event => {
-    setValue(event.target.value);
+  const clearValues = () => {
+    setValues({
+      name: "",
+      email: "",
+      type: "",
+      joinedDate: "",
+      contactPerson: "",
+      contactNo: ""
+    });
+  };
+
+  const handleSubmit = event => {
+    event.preventDefault();
+    console.log(values);
+    Axios.post(`http://localhost:1724/api/v1/client`, values)
+      .then(response => {
+        console.log(response);
+        setShowResult("alert alert-success");
+        setMessage(response.data.message);
+        clearValues();
+        console.log(values);
+      })
+
+      .catch(error => {
+        console.log(error);
+        setShowResult("alert alert-danger");
+        setMessage("Failed to Save!!");
+      });
   };
 
   return (
     <div>
+      <div style={divStyle} className={showResult} role="alert">
+        {message}
+      </div>
       <Container className={classes.container}>
         <Paper
           className={classes.paper}
@@ -106,75 +153,89 @@ export default function AddClientForm() {
             Container: props => <Paper {...props} elevation={4} />
           }}
         >
-          <form className={classes.container} autoComplete="off">
+          <form
+            className={classes.container}
+            autoComplete="off"
+            onSubmit={handleSubmit}
+          >
             <Grid container direction="column" alignItems="center">
-          <div>
-          <TextField
-            required
-            id="project-name"
-            label="Client Name"
-            className={classes.textField}
-            margin="normal"
-            variant="outlined"
-          />
-          <TextField
-            required
-            id="project-desc"
-            label="Client Email"
-            className={classes.textField}
-            margin="normal"
-            variant="outlined"
-          />
-          <FormControl required className={classes.formControl}>
-            <InputLabel ref={inputLabel} htmlFor="clientType">
-              Client Type
-            </InputLabel>
-            <Select
-              id="clientType"
-              labelWidth={labelWidth}
-              value={value}
-              onChange={handleChange}
-            >
-              <MenuItem value="Private">Private</MenuItem>
-              <MenuItem value="Public">Public</MenuItem>
-              <MenuItem value="NGO">NGO</MenuItem>
-              <MenuItem value="Individual">Individual</MenuItem>
-            </Select>
-          </FormControl>
-          </div>
+              <div>
+                <TextField
+                  required
+                  id="client-name"
+                  label="Client Name"
+                  className={classes.textField}
+                  value={values.name}
+                  onChange={handleChange("name")}
+                  margin="normal"
+                  variant="outlined"
+                />
+                <TextField
+                  required
+                  type="email"
+                  id="client-email"
+                  label="Client Email"
+                  className={classes.textField}
+                  value={values.email}
+                  onChange={handleChange("email")}
+                  margin="normal"
+                  variant="outlined"
+                />
+                <FormControl required className={classes.formControl}>
+                  <InputLabel ref={inputLabel} htmlFor="clientType">
+                    Client Type
+                  </InputLabel>
+                  <Select
+                    id="clientType"
+                    labelWidth={labelWidth}
+                    value={values.type}
+                    onChange={handleChange("type")}
+                  >
+                    <MenuItem value="Private">Private</MenuItem>
+                    <MenuItem value="Public">Public</MenuItem>
+                    <MenuItem value="NGO">NGO</MenuItem>
+                    <MenuItem value="Individual">Individual</MenuItem>
+                  </Select>
+                </FormControl>
+              </div>
 
-          <div> 
-          <MuiPickersUtilsProvider utils={DateFnsUtils}>
-            <KeyboardDatePicker
-              margin="normal"
-              id="date-picker-dialog"
-              label="Joined Date"
-              className={classes.dateField}
-              value={selectedDate}
-              onChange={handleDateChange}
-              format="MM/dd/yyyy"
-              KeyboardButtonProps={{
-                "aria-label": "change date"
-              }}
-            />
-          </MuiPickersUtilsProvider>
-          <TextField
-            required
-            id="project-name"
-            label="Contact Person"
-            className={classes.textField}
-            margin="normal"
-            variant="outlined"
-          />
-          <TextField
-            required
-            id="project-name"
-            label="Contact No"
-            className={classes.textField}
-            margin="normal"
-            variant="outlined"
-          />
-          </div>
+              <div>
+                <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                  <KeyboardDatePicker
+                    margin="normal"
+                    id="date-picker-dialog"
+                    label="Joined Date"
+                    className={classes.dateField}
+                    value={joinDate}
+                    onChange={handleJoinDateChange}
+                    format="MM/dd/yyyy"
+                    KeyboardButtonProps={{
+                      "aria-label": "change date"
+                    }}
+                  />
+                </MuiPickersUtilsProvider>
+                <TextField
+                  required
+                  id="contact-person"
+                  label="Contact Person"
+                  className={classes.textField}
+                  value={values.contactPerson}
+                  onChange={handleChange("contactPerson")}
+                  margin="normal"
+                  variant="outlined"
+                />
+                <TextField
+                  required
+                  type="number"
+                  id="contact-no"
+                  label="Contact No"
+                  className={classes.textField}
+                  value={values.contactNo}
+                  onChange={handleChange("contactNo")}
+                  margin="normal"
+                  variant="outlined"
+                />
+              </div>
             </Grid>
             <Grid container justify="flex-end">
               <Button
@@ -183,14 +244,13 @@ export default function AddClientForm() {
                 component={Link}
                 to={"/company-administration/manage-client"}
               >
-                Cancel
+                Back
               </Button>
               <Button
+                type="submit"
                 className={classes.button}
                 variant="contained"
                 color="primary"
-                component={Link}
-                to={"/company-administration/manage-client"}
               >
                 Add
               </Button>

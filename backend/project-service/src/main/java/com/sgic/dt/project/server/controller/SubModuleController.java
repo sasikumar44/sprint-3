@@ -55,11 +55,7 @@ public class SubModuleController {
 	@PostMapping(value = "/submodule")
 	public ResponseEntity<Object> createSubModule(@RequestBody SubModuleDTO subModuleDTO)
 	{
-		SubModule subModule = mapper.map(subModuleDTO, SubModule.class);
-		Module module = moduleService.getModuleById(subModuleDTO.getModuleId());
-		
-		subModule.setProjectId(module.getProjectId());
-		
+		SubModule subModule = mapper.map(subModuleDTO, SubModule.class);		
 		subModuleService.createSubModule(subModule);
 		return new ResponseEntity<>(new ApiResponse(RestApiResponseStatus.CREATED), HttpStatus.CREATED);
 	}

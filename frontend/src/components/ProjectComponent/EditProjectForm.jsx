@@ -91,8 +91,9 @@ export default function EditProjectForm() {
   const inputLabel = React.useRef(null);
   const [showResult, setShowResult] = React.useState("");
   const [message, setMessage] = React.useState("");
-  const [startDate1, setStartDate1] = React.useState(new Date("2019-12-24"));
-  const [endDate1, setEndDate1] = React.useState(new Date("2019-12-24"));
+  const [clients, setClients] = React.useState([]);
+  const [startDate1, setStartDate1] = React.useState(new Date());
+  const [endDate1, setEndDate1] = React.useState(new Date());
 
   const [values, setValues] = React.useState({
     id: "",
@@ -115,6 +116,7 @@ export default function EditProjectForm() {
   const handleChange = name => event => {
     setValues({ ...values, [name]: event.target.value });
   };
+
   useEffect(() => {
     Axios.get(`http://localhost:1725/api/v1/project/${id}`)
       .then(response => {
@@ -129,6 +131,18 @@ export default function EditProjectForm() {
       });
     // eslint-disable-next-line
   }, [id]);
+
+  useEffect(() => {
+    Axios.get("http://localhost:1724/api/v1/client")
+      .then(response => {
+        console.log("A");
+        console.log(response);
+        setClients(response.data.results.listAllClient);
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  }, []);
 
   const updateData = data => {
     handleStartDateChange(data.startDate);
@@ -151,24 +165,12 @@ export default function EditProjectForm() {
         console.log(response);
         setShowResult("alert alert-success");
         setMessage(response.data.message);
-        clearValues();
       })
       .catch(error => {
         console.log(error);
         setShowResult("alert alert-danger");
         setMessage("Failed to Update!!");
       });
-  };
-
-  const clearValues = () => {
-    setValues({
-      name: "",
-      description: "",
-      type: "",
-      status: "",
-      startDate: "",
-      endDate: ""
-    });
   };
 
   return (
@@ -209,9 +211,11 @@ export default function EditProjectForm() {
                     value={values.clientId}
                     onChange={handleChange("clientId")}
                   >
-                    <MenuItem value="Virtusa">Virtusa</MenuItem>
-                    <MenuItem value="Mitra">Mitra</MenuItem>
-                    <MenuItem value="Axiata">Axiata</MenuItem>
+                    {clients.map((client, i) => (
+                      <MenuItem key={i} value={client.id}>
+                        {client.name}
+                      </MenuItem>
+                    ))}
                   </Select>
                 </FormControl>
                 <FormControl required className={classes.formControl}>

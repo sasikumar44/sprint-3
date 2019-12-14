@@ -1,4 +1,4 @@
-import React,{useEffect} from "react";
+import React, { useEffect } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import TextField from "@material-ui/core/TextField";
 import Grid from "@material-ui/core/Grid";
@@ -40,10 +40,10 @@ const divStyle = {
 
 export default function AddModuleForm({ onFinish }) {
   const classes = useStyles();
-  
+
   const [values, setValues] = React.useState({
     name: "",
-    projectId:""
+    projectId: ""
   });
   const [projects, setProjects] = React.useState([]);
   const [showResult, setShowResult] = React.useState("");
@@ -56,10 +56,10 @@ export default function AddModuleForm({ onFinish }) {
   const clearValues = () => {
     setValues({
       name: "",
-      projectId:""
+      projectId: ""
     });
   };
- 
+
   useEffect(() => {
     Axios.get("http://localhost:1725/api/v1/project")
       .then(response => {
@@ -69,8 +69,8 @@ export default function AddModuleForm({ onFinish }) {
       .catch(error => {
         console.log(error);
       });
-  },[]);
-  
+  }, []);
+
   const handleSubmit = event => {
     event.preventDefault();
     Axios.post(`http://localhost:1725/api/v1/module`, values)
@@ -93,11 +93,25 @@ export default function AddModuleForm({ onFinish }) {
         {message}
       </div>
       <form
-            className={classes.container}
-            autoComplete="off"
-            onSubmit={handleSubmit} 
+        className={classes.container}
+        autoComplete="off"
+        onSubmit={handleSubmit}
       >
         <Grid container justify="space-between">
+          <FormControl required className={classes.formControl}>
+            <InputLabel htmlFor="project-name">Project</InputLabel>
+            <Select
+              id="project-name"
+              value={values.projectId}
+              onChange={handleChange("projectId")}
+            >
+              {projects.map((el, i) => (
+                <MenuItem key={i} value={el.id}>
+                  {el.name}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
           <TextField
             required
             id="module-name"
@@ -108,15 +122,6 @@ export default function AddModuleForm({ onFinish }) {
             margin="normal"
             variant="outlined"
           />
-          <FormControl required className={classes.formControl}>
-            <InputLabel htmlFor="project-name">Project</InputLabel>
-            { /*onChange={()=> {handleChange("projectId");test();}*/}
-            <Select id="project-name" value={values.projectId} onChange={handleChange("projectId")} >
-            {
-            projects.map((el,i) => (<MenuItem key = {i} value={el.id}>{el.name}</MenuItem>))
-            }
-            </Select>
-          </FormControl>
         </Grid>
         <Grid container justify="flex-end">
           <Button
