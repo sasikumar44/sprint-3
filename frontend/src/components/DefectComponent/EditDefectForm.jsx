@@ -84,6 +84,9 @@ export default function EditDefectForm() {
   }, []);
   let location = useLocation();
   let id = location.edit.id();
+  const [projects, setProjects] = React.useState([]);
+  const [modules, setModules] = React.useState([]);
+  const [submodules, setSubmodules] = React.useState([]);
   const [severities, setSeverities] = React.useState([]);
   const [priorities, setPriorities] = React.useState([]);
   const [types, setTypes] = React.useState([]);
@@ -155,6 +158,43 @@ export default function EditDefectForm() {
       updatedBy: "1"
     });
   };
+
+  useEffect(() => {
+    Axios.get("http://localhost:1725/api/v1/project")
+      .then(response => {
+        console.log(response);
+        setProjects(response.data.results.List);
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  }, []);
+
+  useEffect(() => {
+    Axios.get(
+      `http://localhost:1725/api/v1/module/byproject/${values.projectId}`
+    )
+      .then(response => {
+        console.log(response);
+        setModules(response.data.results.List);
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  }, [values.projectId]);
+
+  useEffect(() => {
+    Axios.get(
+      `http://localhost:1725/api/v1/submodule/bymodule/${values.moduleId}`
+    )
+      .then(response => {
+        console.log(response);
+        setSubmodules(response.data.results.List);
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  }, [values.moduleId]);
 
   useEffect(() => {
     Axios.get("http://localhost:8087/api/v1/severity")
@@ -286,9 +326,11 @@ export default function EditDefectForm() {
                     value={values.projectId}
                     onChange={handleChange("projectId")}
                   >
-                    <MenuItem value="1">CMS</MenuItem>
-                    <MenuItem value="2">LMS</MenuItem>
-                    <MenuItem value="3">SIS</MenuItem>
+                    {projects.map((project, i) => (
+                      <MenuItem key={i} value={project.id}>
+                        {project.name}
+                      </MenuItem>
+                    ))}
                   </Select>
                 </FormControl>
 
@@ -301,9 +343,11 @@ export default function EditDefectForm() {
                     value={values.moduleId}
                     onChange={handleChange("moduleId")}
                   >
-                    <MenuItem value="1">Left Drawer</MenuItem>
-                    <MenuItem value="2">Header</MenuItem>
-                    <MenuItem value="3">Footer</MenuItem>
+                    {modules.map((module, i) => (
+                      <MenuItem key={i} value={module.id}>
+                        {module.name}
+                      </MenuItem>
+                    ))}
                   </Select>
                 </FormControl>
               </div>
@@ -317,8 +361,11 @@ export default function EditDefectForm() {
                     value={values.submoduleId}
                     onChange={handleChange("submoduleId")}
                   >
-                    <MenuItem value="1">Menu Item</MenuItem>
-                    <MenuItem value="2">Search Bar</MenuItem>
+                    {submodules.map((submodule, i) => (
+                      <MenuItem key={i} value={submodule.id}>
+                        {submodule.name}
+                      </MenuItem>
+                    ))}
                   </Select>
                 </FormControl>
 
