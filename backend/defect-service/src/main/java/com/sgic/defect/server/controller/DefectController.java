@@ -85,14 +85,14 @@ public class DefectController {
 			
 			defectDto.setSubmoduleName(getName("http://localhost:1725/api/v1/submodule/name/"+defectDto.getSubmoduleId()));
 			
-			defectDto.setAssignedToName(getName("http://localhost:1724/employee/name/"+defectDto.getAssignedTo()));
+			defectDto.setAssignedToName(getName("http://localhost:1724/api/v1/employee/name/"+defectDto.getAssignedTo()));
 			
-			defectDto.setAssignedByName(getName("http://localhost:1724/employee/name/"+defectDto.getAssignedBy()));
+			defectDto.setAssignedByName(getName("http://localhost:1724/api/v1/employee/name/"+defectDto.getAssignedBy()));
 			
-			defectDto.setCreatedByName(getName("http://localhost:1724/employee/name/"+defectDto.getCreatedBy()));
+			defectDto.setCreatedByName(getName("http://localhost:1724/api/v1/employee/name/"+defectDto.getCreatedBy()));
 			
 			if(defectDto.getUpdatedBy()!=null) {
-				defectDto.setUpdatedByName(getName("http://localhost:1724/employee/name/"+defectDto.getUpdatedBy()));
+				defectDto.setUpdatedByName(getName("http://localhost:1724/api/v1/employee/name/"+defectDto.getUpdatedBy()));
 			}
 				
 			Priority priority = priorityService.getPriorityById(defectDto.getPriorityId());
@@ -144,14 +144,14 @@ public class DefectController {
 			
 		defectDto.setSubmoduleName(getName("http://localhost:1725/api/v1/submodule/name/"+defectDto.getSubmoduleId()));
 			
-		defectDto.setAssignedToName(getName("http://localhost:1724/employee/name/"+defectDto.getAssignedTo()));
+		defectDto.setAssignedToName(getName("http://localhost:1724/api/v1/employee/name/"+defectDto.getAssignedTo()));
 			
-		defectDto.setAssignedByName(getName("http://localhost:1724/employee/name/"+defectDto.getAssignedBy()));
+		defectDto.setAssignedByName(getName("http://localhost:1724/api/v1/employee/name/"+defectDto.getAssignedBy()));
 			
-		defectDto.setCreatedByName(getName("http://localhost:1724/employee/name/"+defectDto.getCreatedBy()));
+		defectDto.setCreatedByName(getName("http://localhost:1724/api/v1/employee/name/"+defectDto.getCreatedBy()));
 		
 		if(defectDto.getUpdatedBy()!=null) {
-			defectDto.setUpdatedByName(getName("http://localhost:1724/employee/name/"+defectDto.getUpdatedBy()));
+			defectDto.setUpdatedByName(getName("http://localhost:1724/api/v1/employee/name/"+defectDto.getUpdatedBy()));
 		}
 			
 		Priority priority = priorityService.getPriorityById(defectDto.getPriorityId());
