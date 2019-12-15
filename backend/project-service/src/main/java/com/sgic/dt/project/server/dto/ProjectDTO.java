@@ -7,6 +7,8 @@ private Long id;
 	
 	private String name;
 	private String description;
+	private Long clientId;
+	private String clientName;
 	private String type;
 	private String status;
 	private Date startDate;
@@ -54,6 +56,18 @@ private Long id;
 	}
 	public void setEndDate(Date endDate) {
 		this.endDate = endDate;
+	}
+	public Long getClientId() {
+		return clientId;
+	}
+	public void setClientId(Long clientId) {
+		this.clientId = clientId;
+	}
+	public String getClientName() {
+		return clientName;
+	}
+	public void setClientName(String clientName) {
+		this.clientName = clientName;
 	}
 	
 	

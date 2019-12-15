@@ -38,7 +38,7 @@ const columns = [
     }
   },
   {
-    name: "ClientName",
+    name: "clientName",
     label: "Client Name",
     options: {
       filter: true,

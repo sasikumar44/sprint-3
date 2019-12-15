@@ -15,12 +15,12 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.RestTemplate;
 
 import com.sgic.common.api.enums.RestApiResponseStatus;
 import com.sgic.common.api.response.ApiResponse;
 import com.sgic.common.api.response.ContentResponse;
 import com.sgic.common.api.response.ListContentResponse;
-
 import com.sgic.dt.project.dto.mapper.Mapper;
 import com.sgic.dt.project.server.dto.ProjectDTO;
 import com.sgic.dt.project.server.entities.Project;
@@ -51,6 +51,13 @@ public class ProjectController {
 		return new ResponseEntity<>(new ApiResponse(RestApiResponseStatus.CREATED), HttpStatus.CREATED);
 	}
 	
+	private static String getName(String uri)
+	{	     
+	    RestTemplate restTemplate = new RestTemplate();
+	    String name = restTemplate.getForObject(uri, String.class);
+	    return name;
+	}
+	
 	//=============== GET ALL PROJECTS ===============================//
 	@GetMapping(value = "/project")
 	 public ResponseEntity<Object> getProjects() 
@@ -58,6 +65,11 @@ public class ProjectController {
 		List <Project> projectList = projectService.getAllProjects();
 		List<ProjectDTO> projectDtoList = mapper.map(projectList, ProjectDTO.class);
 		//return projectDtoList;
+		
+		for(ProjectDTO projectDto : projectDtoList) {
+			projectDto.setClientName(getName("http://localhost:1724/api/v1/client/name/"+projectDto.getClientId()));
+		}
+		
 		return new ResponseEntity<>(new ListContentResponse<ProjectDTO>("List",projectDtoList, RestApiResponseStatus.RECEIVED), HttpStatus.OK);
 		
 	}
@@ -70,6 +82,7 @@ public class ProjectController {
 		Project project = projectService.getProjectById(id);
 		ProjectDTO projectDto = mapper.map(project, ProjectDTO.class);
 		//return new ResponseEntity<ProjectDTO>(projectDto, HttpStatus.OK);
+		projectDto.setClientName(getName("http://localhost:1724/api/v1/client/name/"+projectDto.getClientId()));
 		return new ResponseEntity<>(new ContentResponse<ProjectDTO>("Object", projectDto, RestApiResponseStatus.RECEIVED), HttpStatus.OK);	
 		
 	}

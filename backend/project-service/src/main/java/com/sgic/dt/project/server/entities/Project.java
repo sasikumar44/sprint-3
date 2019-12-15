@@ -29,6 +29,7 @@ public class Project {
 	
 	private String name;
 	private String description;
+	private Long clientId;
 	private String type;
 	private String status;
 	private Date startDate;
@@ -82,6 +83,12 @@ public class Project {
 		return serialVersionUID;
 	}
 	//================================================//
+	public Long getClientId() {
+		return clientId;
+	}
+	public void setClientId(Long clientId) {
+		this.clientId = clientId;
+	}
 	
 	
 }
